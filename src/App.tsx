@@ -17,14 +17,35 @@ function App() {
 }
 
 function CurrencyForm() {
+  
+  const [selectedCurrency, setSelectedCurrency] = React.useState('');
+  const [selectedAmount, setSelectedAmount] = React.useState(1);
+
+  const handleCurrencySelectionChange = (event: React.SyntheticEvent) => {
+    let target = event.target as HTMLInputElement;
+    setSelectedCurrency(target.value);
+  }
+
+  const handleAmountChange = (event: React.SyntheticEvent) => {
+    let target = event.target as HTMLInputElement;
+    setSelectedAmount(Number(target.value));
+  }
 
   const { isLoading, error, data, isFetching } = useQuery("currencyData", () =>
     axios.get(API_URL)
     .then((res) => {
       console.log('Transformed Data:', transformData(res.data))
-      return res.data
+      return transformData(res.data)
     })
   )
+
+  const handleSubmit = (event: React.SyntheticEvent) => {
+    event.preventDefault()
+    const currencyInfo = data?.conversionData.find(({currencyCode}) => currencyCode === selectedCurrency)
+    if (currencyInfo) {
+      console.log((currencyInfo?.amount / currencyInfo?.rate * selectedAmount).toFixed(3))
+    }
+  }
 
   if (isLoading) return <p>Loading...</p>
 
@@ -32,20 +53,22 @@ function CurrencyForm() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>{data}</p>
-        <form>
+        <form onSubmit={handleSubmit}>
           <label>
             Amount to Convert:
-            <input type="number" />
+            <input value={selectedAmount} type="number" onChange={handleAmountChange}/>
           </label>
           <label>
             Choose the currency to convert to:
-            <select>
-              <option value="USD">US Dollar</option>
-              <option value="INR">Indian Rupees</option>
-              <option value="JPY">Japan Yen</option>
+            <select value={selectedCurrency} onChange={handleCurrencySelectionChange}>
+              {data?.conversionData.map((currency) => (
+                <option key={currency.currencyCode} 
+                  value={currency.currencyCode}>{currency.country + ' (' + currency.currencyString + ')'}
+                </option>
+              ))}
             </select>
           </label>
+          <button type="submit">Submit</button>
         </form>
       </header>
     </div>

@@ -33,12 +33,12 @@ export const transformData = (currencyData: string) => {
                     currencyCode,
                     country: formattedConversion[headerIndexes[HeaderStrings.COUNTRY]],
                     currencyString: formattedConversion[headerIndexes[HeaderStrings.CURRENCY]],
-                    amount: formattedConversion[headerIndexes[HeaderStrings.AMOUNT]],
-                    rate: formattedConversion[headerIndexes[HeaderStrings.RATE]],
+                    amount: Number(formattedConversion[headerIndexes[HeaderStrings.AMOUNT]]),
+                    rate: Number(formattedConversion[headerIndexes[HeaderStrings.RATE]]),
                 }
             })
     return {
         date,
-        conversionData
+        conversionData,
     }
 }
