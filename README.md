@@ -1,6 +1,6 @@
 # CZK Currency Converter
 
-- This is a React web app which allows users to convert Czech(CZK) currency to other currencies
+- This is a React web app(bootstrapped using `create-react-app`) which allows users to convert Czech(CZK) currency to other currencies
 - [This](https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt?date=09.02.2023) is the API used for the conversion data
 
 
