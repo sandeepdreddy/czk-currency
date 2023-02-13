@@ -9,8 +9,7 @@ export default function CurrencyInfoTable({ conversionInfo} : { conversionInfo: 
                 <tr>
                     <th>{HeaderStrings.COUNTRY}</th>
                     <th>{HeaderStrings.CURRENCY}</th>
-                    <th>{HeaderStrings.AMOUNT}</th>
-                    <th>{HeaderStrings.CODE}</th>
+                    <th>{HeaderStrings.UNIT_AMOUNT}</th>
                     <th>{HeaderStrings.RATE}</th>
                 </tr>
             </thead>
@@ -19,9 +18,8 @@ export default function CurrencyInfoTable({ conversionInfo} : { conversionInfo: 
                     <tr key={conversion.currencyCode}>
                         <td>{conversion.country}</td>
                         <td>{conversion.currencyString}</td>
-                        <td>{conversion.amount}</td>
-                        <td>{conversion.currencyCode}</td>
-                        <td>{conversion.rate}</td>
+                        <td>{conversion.amount + " " + conversion.currencyCode}</td>
+                        <td>{conversion.rate + " CZK"}</td>
                     </tr>
                 ))}
             </tbody>

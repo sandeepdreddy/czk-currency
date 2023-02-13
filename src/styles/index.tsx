@@ -81,4 +81,5 @@ export const Result = styled.div`
 export const DateInfo = styled.div`
     font-weight: bold;
     font-size: 15px;
+    color: green;
 `

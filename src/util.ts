@@ -8,6 +8,7 @@ export const HeaderStrings = {
     AMOUNT: 'Amount',
     CODE: 'Code',
     RATE: 'Rate',
+    UNIT_AMOUNT: 'Unit Amount'
 }
 
 // Fetching indexes in case columns are changed in the

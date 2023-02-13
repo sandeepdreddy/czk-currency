@@ -16,7 +16,7 @@ import {
 } from './styles'
 import CurrencyInfoTable from './components/currencytInfoTable'
 
-const API_URL = 'https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt'
+const API_URL = '/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt'
 
 export default function CurrencyConverterForm() {
     const [selectedCurrency, setSelectedCurrency] = React.useState('');
