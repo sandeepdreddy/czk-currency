@@ -10,8 +10,11 @@ import {
     CurrencySelectionField,
     FieldLabel,
     ResultContainer,
-    SubmitButton
+    SubmitButton,
+    Result,
+    DateInfo
 } from './styles'
+import CurrencyInfoTable from './components/currencytInfoTable'
 
 const API_URL = 'https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt'
 
@@ -23,19 +26,26 @@ export default function CurrencyConverterForm() {
     const handleCurrencySelectionChange = (event: React.SyntheticEvent) => {
         let target = event.target as HTMLInputElement;
         setSelectedCurrency(target.value);
+        setConvertedAmount('')
     }
 
     const handleAmountChange = (event: React.SyntheticEvent) => {
         let target = event.target as HTMLInputElement;
         setSelectedAmount(Number(target.value));
+        setConvertedAmount('')
     }
 
-    const { isLoading, error, data, isFetching } = useQuery("currencyData", () =>
+    const { isLoading, error, data } = useQuery("currencyData", () =>
         axios.get(API_URL)
-        .then((res) => {
-        console.log('Transformed Data:', transformData(res.data))
-        return transformData(res.data)
-        })
+            .then((res) => {
+                const transformedData = transformData(res.data)
+                const { conversionData } = transformedData
+                if (conversionData && conversionData.length) {
+                    // Set first currency as the deafult selection
+                    setSelectedCurrency(conversionData[0].currencyCode)
+                }
+                return transformedData
+            })
     )
 
     const handleSubmit = (event: React.SyntheticEvent) => {
@@ -44,15 +54,16 @@ export default function CurrencyConverterForm() {
         if (currencyInfo) {
             const convertedAmount = (currencyInfo?.amount / currencyInfo?.rate * selectedAmount).toFixed(3)
             setConvertedAmount(convertedAmount)
-            console.log(convertedAmount)
         }
     }
 
-    if (isLoading) return <p>Loading...</p>
+    if (isLoading) return <p>Loading currency info...</p>
 
-    if (error) return <p>An error has occurred</p>
+    if (error) return <p>Error occurred while fetching currency inforamtion</p>
+
     return (
         <>
+            {/* <h3>Date: {data?.date.substring(0, data?.date.lastIndexOf(' '))}</h3> */}
             <form onSubmit={handleSubmit}>
                 <InputFieldsContainer>
                     <AmountInputContainer>
@@ -64,7 +75,7 @@ export default function CurrencyConverterForm() {
                         <CurrencySelectionField value={selectedCurrency} onChange={handleCurrencySelectionChange}>
                             {data?.conversionData.map((currency) => (
                                 <option key={currency.currencyCode} 
-                                value={currency.currencyCode}>{currency.country + ' (' + currency.currencyString + ')'}
+                                    value={currency.currencyCode}>{currency.country + ' (' + currency.currencyString + ')'}
                                 </option>
                             ))}
                         </CurrencySelectionField>
@@ -72,10 +83,11 @@ export default function CurrencyConverterForm() {
                 </InputFieldsContainer>
                 <ResultContainer>
                     <SubmitButton type="submit">Convert</SubmitButton>
-                    <p>{selectedAmount + " CZK = " + convertedAmount + " " + selectedCurrency}</p>
+                    <Result>{selectedAmount + " CZK = " + convertedAmount + " " + selectedCurrency}</Result>
+                    <DateInfo>Showing exchange rates for the date: {data?.date.substring(0, data?.date.lastIndexOf(' '))}</DateInfo>
                 </ResultContainer>
-                {/* <button type="submit">Submit</button> */}
             </form>
+            {data && <CurrencyInfoTable conversionInfo={data.conversionData}/>}
         </>
     )
 }

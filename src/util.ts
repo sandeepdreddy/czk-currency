@@ -1,3 +1,5 @@
+import { CurrencyInfo } from './types'
+
 const COLUMN_DELIMITER = '|'
 
 export const HeaderStrings = {
@@ -10,7 +12,7 @@ export const HeaderStrings = {
 
 // Fetching indexes in case columns are changed in the
 // repsonse from the API
-const getHeaderIndexes = (headersInfo: string) => {
+const getHeaderIndexes = (headersInfo: string): Record<string, number> => {
     const headers = headersInfo.split(COLUMN_DELIMITER)
     return {
         [HeaderStrings.COUNTRY] : headers.indexOf(HeaderStrings.COUNTRY),
@@ -21,7 +23,7 @@ const getHeaderIndexes = (headersInfo: string) => {
     }
 }
 
-export const transformData = (currencyData: string) => {
+export const transformData = (currencyData: string): CurrencyInfo => {
     const [date, headersInfo, ...rest] = currencyData.split('\n')
     const headerIndexes = getHeaderIndexes(headersInfo)
     const conversionData = 
